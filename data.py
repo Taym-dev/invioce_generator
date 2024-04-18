@@ -3,6 +3,7 @@ from os import listdir, replace
 from os.path import isfile, join, dirname, realpath
 from invoice import createInvoice
 from re import match
+from datetime import datetime, timedelta
  
 this_path = dirname(realpath(__file__))
 json_in_path = f"{this_path}/JSON_IN"
@@ -18,7 +19,6 @@ for fileName in onlyfiles:
 	INVOICE_INFO = {
 		"id": file_data["ordernummer"],
 		"createdAt": file_data["orderdatum"],
-		"expiresAt": "24-04-2024",
 		"term": int(match("\d+", file_data["betaaltermijn"]).group())
 	}
 
@@ -35,6 +35,8 @@ for fileName in onlyfiles:
 
 	# JSON
 	invoice = {
+		"createdAt": product["orderdatum"],
+		"expiresAt": (datetime.strptime(INVOICE_INFO['createdAt'], "%d-%m-%Y") + timedelta(INVOICE_INFO['term'])).strftime("%d-%m-%Y"),
 		"products": [],
 		"totalWithoutTax": 0,
 		"tax": 0,
