@@ -46,15 +46,15 @@ for fileName in onlyfiles:
 			"amount": product["aantal"],
 			"name": product["productnaam"],
 			"priceOne": product["prijs_per_stuk_excl_btw"],
-			"priceAll": product["prijs_per_stuk_excl_btw"] * product["aantal"],
-			"taxPercentage": product["btw_per_stuk"]
+			"priceAll": round(product["prijs_per_stuk_excl_btw"] * product["aantal"], 2),
+			"taxPercentage": product["btw_percentage"]
 		})
 
 		invoice["totalWithoutTax"] += product["prijs_per_stuk_excl_btw"]
-		invoice["tax"] += product["prijs_per_stuk_excl_btw"] * (product["btw_per_stuk"] / 100)
+		invoice["tax"] += round(product["prijs_per_stuk_excl_btw"] * (product["btw_percentage"] / 100), 2)
 
 	invoice["total"] = invoice["totalWithoutTax"] + invoice["tax"]
 
-	with open(f"{this_path}/INVOICE/{fileName}") as file:
+	with open(f"{this_path}/INVOICE/{fileName}", "w") as file:
 		json.dump(invoice, file)
 
