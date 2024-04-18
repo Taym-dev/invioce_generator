@@ -2,6 +2,15 @@ from datetime import datetime, timedelta
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
 
+COMPANY_INFO = {
+	"name": "Naam",
+	"address": "Adres 1",
+	"postalCity": "1234AB Stad",
+	"kvk": "12345678",
+	"btw": "NL123456789B01",
+	"bank": "NL12ABNA1234567890"
+}
+
 def formatMoney(value):
 	return "€ {:,.2f}".format(round(value, 2)).replace(",", "|").replace(".", ",").replace("|", ".")
 
@@ -13,13 +22,13 @@ def createInvoice(invoiceInfo, clientInfo, products, outputPath):
 	offsetLeft = 50
 	offsetRight = A4[0] - 225
 
-	c.drawString(offsetRight, A4[1] - (100 + (18 * 0)), "TayTib")
-	c.drawString(offsetRight, A4[1] - (100 + (18 * 1)), "Van Bosseplantsoen 6")
-	c.drawString(offsetRight, A4[1] - (100 + (18 * 2)), "3317PH Dordrecht")
+	c.drawString(offsetRight, A4[1] - (100 + (18 * 0)), COMPANY_INFO["name"])
+	c.drawString(offsetRight, A4[1] - (100 + (18 * 1)), COMPANY_INFO["address"])
+	c.drawString(offsetRight, A4[1] - (100 + (18 * 2)), COMPANY_INFO["postalCity"])
 
-	c.drawString(offsetRight, A4[1] - (175 + (18 * 0)), "KVK:  896467")
-	c.drawString(offsetRight, A4[1] - (175 + (18 * 1)), "BTW:  NL531532567B01")
-	c.drawString(offsetRight, A4[1] - (175 + (18 * 2)), "Bank:  NL91ABNA0417164300")
+	c.drawString(offsetRight, A4[1] - (175 + (18 * 0)), f"KVK:  {COMPANY_INFO['kvk']}")
+	c.drawString(offsetRight, A4[1] - (175 + (18 * 1)), f"BTW:  {COMPANY_INFO['btw']}")
+	c.drawString(offsetRight, A4[1] - (175 + (18 * 2)), f"Bank:  {COMPANY_INFO['bank']}")
 
 	c.drawString(offsetLeft, A4[1] - (258 + (18 * 0)), clientInfo['name'])
 	c.drawString(offsetLeft, A4[1] - (258 + (18 * 1)), clientInfo['address'])
@@ -73,28 +82,28 @@ def createInvoice(invoiceInfo, clientInfo, products, outputPath):
 	c.drawString(410, A4[1] - (461 + (21 * (i + 3))), formatMoney(subTotal + totalTax))
 
 	c.setFont("Helvetica", 10)
-	c.drawString(50, 66, f"Wij verzoek u om de betaling binnen {invoiceInfo['term']}-dagen te voldoen op rekening NL91ABNA0417164300")
+	c.drawString(50, 66, f"Wij verzoek u om de betaling binnen {invoiceInfo['term']}-dagen te voldoen op rekening {COMPANY_INFO['bank']}")
 	c.drawString(50, 50, "onder vermelding van het factuurnummer.")
 
 	c.save()
 
 # Test
-INVOICE_INFO = {
-	"id": "AAAA",
-	"createdAt": "20-04-2024",
-	"term": 60
-}
+# INVOICE_INFO = {
+# 	"id": "123456789",
+# 	"createdAt": "01-01-1970",
+# 	"term": 1
+# }
 
-CLIENT_INFO = {
-	"name": "C",
-	"address": "Vishaven 243",
-	"postalCity": "6969PH Taymstad",
-	"kvk": "988840203"
-}
+# CLIENT_INFO = {
+# 	"name": "Naam",
+# 	"address": "Adres 2",
+# 	"postalCity": "4321BA Stad",
+# 	"kvk": "87654321"
+# }
 
-PRODUCTS = [
-	{ "productnaam": "A", "aantal": 5, "prijs_per_stuk_excl_btw": 123, "btw_percentage": 21 },
-	{ "productnaam": "B", "aantal": 2, "prijs_per_stuk_excl_btw": 1231, "btw_percentage": 9 }
-]
+# PRODUCTS = [
+# 	{ "productnaam": "A", "aantal": 1, "prijs_per_stuk_excl_btw": 7.5, "btw_percentage": 21 },
+# 	{ "productnaam": "B", "aantal": 2, "prijs_per_stuk_excl_btw": 7.5, "btw_percentage": 9 }
+# ]
 
-createInvoice(INVOICE_INFO, CLIENT_INFO, PRODUCTS, "invoice.pdf")
+# createInvoice(INVOICE_INFO, CLIENT_INFO, PRODUCTS, "invoice.pdf")
