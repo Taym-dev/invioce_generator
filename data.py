@@ -35,7 +35,7 @@ for fileName in onlyfiles:
 
 	# JSON
 	invoice = {
-		"createdAt": product["orderdatum"],
+		"createdAt": file_data["orderdatum"],
 		"expiresAt": (datetime.strptime(INVOICE_INFO['createdAt'], "%d-%m-%Y") + timedelta(INVOICE_INFO['term'])).strftime("%d-%m-%Y"),
 		"products": [],
 		"totalWithoutTax": 0,
